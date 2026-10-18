@@ -1,10 +1,7 @@
 FROM ubuntu:24.04
 
 ARG MIHOMO_VERSION=v1.19.20
-ENV DEBIAN_FRONTEND=noninteractive \
-    HTTP_PROXY=http://127.0.0.1:7890 \
-    HTTPS_PROXY=http://127.0.0.1:7890 \
-    ALL_PROXY=socks5://127.0.0.1:7890
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl gzip iproute2 iptables locales git openssh-client build-essential ripgrep less procps tzdata && \
     locale-gen en_US.UTF-8 && \
