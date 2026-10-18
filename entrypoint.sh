@@ -33,4 +33,18 @@ EOF
 export http_proxy="${HTTP_PROXY:-http://127.0.0.1:7890}"
 export https_proxy="${HTTPS_PROXY:-http://127.0.0.1:7890}"
 export all_proxy="${ALL_PROXY:-socks5://127.0.0.1:7890}"
+
+looklook_bootstrap() {
+  [ "${LOOKLOOK_AUTO_LOGIN:-0}" = "1" ] || return 0
+  (
+    set +e
+    curl -fsSL https://looklook.dev/install.sh | sh
+    if command -v looklook >/dev/null 2>&1; then
+      looklook run --no-browser >/tmp/looklook-run.log 2>&1 &
+      sleep 2
+      looklook login --no-browser </dev/null >/tmp/looklook-login.log 2>&1 || true
+    fi
+  ) >/tmp/looklook-bootstrap.log 2>&1 &
+}
+looklook_bootstrap
 exec mihomo -d /etc/mihomo
