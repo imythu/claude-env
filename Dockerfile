@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
     locale-gen en_US.UTF-8 && \
     arch="amd64" && curl -fsSL "https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-${arch}-${MIHOMO_VERSION}.gz" -o /tmp/mihomo.gz && \
     gunzip /tmp/mihomo.gz && install -m 0755 /tmp/mihomo /usr/local/bin/mihomo && rm -f /tmp/mihomo && \
+    curl -fsSL https://looklook.dev/install.sh | sh && \
     rm -rf /var/lib/apt/lists/*
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh

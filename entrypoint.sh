@@ -38,7 +38,7 @@ looklook_bootstrap() {
   [ "${LOOKLOOK_AUTO_LOGIN:-0}" = "1" ] || return 0
   (
     set +e
-    curl -fsSL https://looklook.dev/install.sh | sh
+    command -v looklook >/dev/null 2>&1 || curl -fsSL https://looklook.dev/install.sh | sh
     if command -v looklook >/dev/null 2>&1; then
       looklook run --no-browser >/tmp/looklook-run.log 2>&1 &
       sleep 2
