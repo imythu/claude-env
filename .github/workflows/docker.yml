@@ -30,5 +30,6 @@ jobs:
         with:
           context: .
           push: true
+          build-args: LOOKLOOK_CACHE=${{ github.run_id }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
