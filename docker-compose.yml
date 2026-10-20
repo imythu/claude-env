@@ -11,8 +11,6 @@ services:
       SOCKS_USERNAME: ${SOCKS_USERNAME:-}
       SOCKS_PASSWORD: ${SOCKS_PASSWORD:-}
       LOOKLOOK_AUTO_LOGIN: ${LOOKLOOK_AUTO_LOGIN:-0}
-    ports:
-      - "7890:7890"
     volumes:
       - ./workspace:/workspace
     restart: unless-stopped
