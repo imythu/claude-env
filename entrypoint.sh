@@ -22,9 +22,10 @@ proxy-groups:
     type: select
     proxies: [upstream]
 rules:
-  # Looklook 登录、升级、下载和远程终端连接走直连
-  - DOMAIN-SUFFIX,looklook.dev,DIRECT
-  - DOMAIN-SUFFIX,looklook.app,DIRECT
+  # 仅将 Looklook 中继节点走直连
+  - DOMAIN,r1.looklook.dev,DIRECT
+  - DOMAIN,r3.looklook.dev,DIRECT
+  - DOMAIN-WILDCARD,r*.looklook.dev,DIRECT
   - DOMAIN-SUFFIX,lan,DIRECT
   - DOMAIN-SUFFIX,local,DIRECT
   - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
