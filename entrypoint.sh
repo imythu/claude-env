@@ -23,9 +23,10 @@ proxy-groups:
     proxies: [upstream]
 rules:
   # 仅将 Looklook 中继节点走直连
-  - DOMAIN,r1.looklook.dev,DIRECT
+  - DOMAIN,r2.looklook.dev,DIRECT
   - DOMAIN,r3.looklook.dev,DIRECT
-  - DOMAIN-WILDCARD,r*.looklook.dev,DIRECT
+  - IP-CIDR,154.219.107.44/32,DIRECT,no-resolve
+  - IP-CIDR,47.108.195.230/32,DIRECT,no-resolve
   - DOMAIN-SUFFIX,lan,DIRECT
   - DOMAIN-SUFFIX,local,DIRECT
   - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
