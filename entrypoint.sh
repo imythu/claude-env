@@ -21,7 +21,39 @@ proxy-groups:
   - name: GLOBAL
     type: select
     proxies: [upstream]
+tun:
+  enable: true
+  device: mihomo0
+  stack: mixed
+  auto-route: true
+  auto-detect-interface: true
+  strict-route: true
+  dns-hijack:
+    - any:53
+    - tcp://any:53
+  mtu: 1500
+dns:
+  enable: true
+  listen: 127.0.0.1:1053
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-filter:
+    - 4.kleeclub.top
+    - '*.lan'
+    - '*.local'
+  fake-ip-range: 198.18.0.1/16
+  respect-rules: true
+  default-nameserver:
+    - 8.8.8.8
+    - 1.1.1.1
+  proxy-server-nameserver:
+    - 8.8.8.8
+    - 1.1.1.1
+  nameserver:
+    - 'https://1.1.1.1/dns-query#upstream'
+    - 'https://8.8.8.8/dns-query#upstream'
 rules:
+  - DOMAIN,4.kleeclub.top,DIRECT
   # 仅将 Looklook 中继节点走直连
   - DOMAIN,r2.looklook.dev,DIRECT
   - DOMAIN,r3.looklook.dev,DIRECT

@@ -1,0 +1,5 @@
+.env
+*.pem
+*.key
+*.gz
+remote-setup.sh

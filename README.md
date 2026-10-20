@@ -8,7 +8,7 @@ cp .env.example .env
 docker compose up -d --build
 ```
 
-Use `http://127.0.0.1:7890` for HTTP/HTTPS traffic and `socks5://127.0.0.1:7890` for SOCKS traffic. The image is built automatically by GitHub Actions and published to GHCR on every release or push to `main`.
+Use `http://127.0.0.1:7890` for HTTP/HTTPS traffic and `socks5://127.0.0.1:7890` for SOCKS traffic. The image enables Mihomo TUN mode and DNS interception; Docker must be started with `NET_ADMIN`, `NET_RAW`, and `/dev/net/tun` (the included Compose file already sets these). The image is built automatically by GitHub Actions and published to GHCR on every release or push to `main`.
 
 ## Optional Looklook client
 
