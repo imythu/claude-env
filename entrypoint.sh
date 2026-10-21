@@ -75,6 +75,16 @@ looklook_backup_watch() {
   /usr/local/bin/looklook-watch.sh >/tmp/looklook-watch.log 2>&1 &
 }
 
+fuck_claude_scheduler() {
+  [ "${FUCK_CLAUDE_AUTO_APPLY:-1}" = "1" ] || return 0
+  (
+    while :; do
+      /opt/fuck-claude/bin/apply-docker.sh >/tmp/fuck-claude-apply.log 2>&1 || true
+      sleep "${FUCK_CLAUDE_APPLY_INTERVAL:-3600}"
+    done
+  ) &
+}
+
 looklook_bootstrap() {
   [ "${LOOKLOOK_AUTO_UPDATE:-0}" = "1" ] || [ "${LOOKLOOK_AUTO_LOGIN:-0}" = "1" ] || return 0
   (
@@ -95,5 +105,6 @@ looklook_bootstrap() {
   ) >/tmp/looklook-bootstrap.log 2>&1 &
 }
 looklook_backup_watch
+fuck_claude_scheduler
 looklook_bootstrap
 exec mihomo -d /etc/mihomo
