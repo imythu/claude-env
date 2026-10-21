@@ -3,6 +3,7 @@ FROM ubuntu:24.04
 ARG MIHOMO_VERSION=v1.19.20
 ARG LOOKLOOK_CACHE=manual
 ENV DEBIAN_FRONTEND=noninteractive
+ENV LOOKLOOK_PREFIX=/usr/local/lib/looklook
 
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl gzip iproute2 iptables locales git openssh-client build-essential ripgrep less procps tzdata && \
     locale-gen en_US.UTF-8 && \
