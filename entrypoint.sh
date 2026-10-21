@@ -71,19 +71,29 @@ export http_proxy="${HTTP_PROXY:-http://127.0.0.1:7890}"
 export https_proxy="${HTTPS_PROXY:-http://127.0.0.1:7890}"
 export all_proxy="${ALL_PROXY:-socks5://127.0.0.1:7890}"
 
+looklook_backup_watch() {
+  /usr/local/bin/looklook-watch.sh >/tmp/looklook-watch.log 2>&1 &
+}
+
 looklook_bootstrap() {
-  [ "${LOOKLOOK_AUTO_LOGIN:-0}" = "1" ] || return 0
+  [ "${LOOKLOOK_AUTO_UPDATE:-0}" = "1" ] || [ "${LOOKLOOK_AUTO_LOGIN:-0}" = "1" ] || return 0
   (
     set +e
     if ! looklook --version >/dev/null 2>&1; then
       LOOKLOOK_PREFIX="${LOOKLOOK_PREFIX:-/usr/local/lib/looklook}" curl -fsSL https://looklook.dev/install.sh | LOOKLOOK_PREFIX="${LOOKLOOK_PREFIX:-/usr/local/lib/looklook}" sh
     fi
     if looklook --version >/dev/null 2>&1; then
-      looklook run --no-browser >/tmp/looklook-run.log 2>&1 &
-      sleep 2
-      looklook login --no-browser </dev/null >/tmp/looklook-login.log 2>&1 || true
+      if [ "${LOOKLOOK_AUTO_UPDATE:-0}" = "1" ]; then
+        looklook upgrade >/tmp/looklook-upgrade.log 2>&1 || true
+      fi
+      if [ "${LOOKLOOK_AUTO_LOGIN:-0}" = "1" ]; then
+        looklook run --no-browser >/tmp/looklook-run.log 2>&1 &
+        sleep 2
+        looklook login --no-browser </dev/null >/tmp/looklook-login.log 2>&1 || true
+      fi
     fi
   ) >/tmp/looklook-bootstrap.log 2>&1 &
 }
+looklook_backup_watch
 looklook_bootstrap
 exec mihomo -d /etc/mihomo

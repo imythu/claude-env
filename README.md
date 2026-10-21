@@ -12,4 +12,4 @@ The container keeps the HTTP/SOCKS proxy on its internal `7890` port and does no
 
 ## Optional Looklook client
 
-The host-side `install-docker.sh` needs the Docker CLI and cannot run inside this container. Set `LOOKLOOK_AUTO_LOGIN=1` in `.env` to install the official client and start its login flow asynchronously at startup. Check `/tmp/looklook-bootstrap.log` and complete interactive sign-in with `docker exec -it dev-proxy looklook login`.
+The host-side `install-docker.sh` needs the Docker CLI and cannot run inside this container. Set `LOOKLOOK_AUTO_UPDATE=1` in `.env` to check for and install the latest Looklook client asynchronously at container startup. Set `LOOKLOOK_AUTO_LOGIN=1` to start the login flow as well. The Compose file maps `./looklook/backup` to the Looklook backup directory; a watcher checks the executable every 30 seconds, restores it when missing, and saves upgraded files back to the mapped directory. Check `/tmp/looklook-bootstrap.log` and complete interactive sign-in with `docker exec -it dev-proxy looklook login`.

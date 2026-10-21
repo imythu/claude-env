@@ -10,10 +10,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
     arch="amd64" && curl -fsSL "https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-${arch}-${MIHOMO_VERSION}.gz" -o /tmp/mihomo.gz && \
     gunzip /tmp/mihomo.gz && install -m 0755 /tmp/mihomo /usr/local/bin/mihomo && rm -f /tmp/mihomo && \
     echo "Looklook cache: ${LOOKLOOK_CACHE}" && curl -fsSL https://looklook.dev/install.sh | sh && \
+    mkdir -p /usr/local/share/looklook-backup && cp -a /usr/local/lib/looklook/. /usr/local/share/looklook-backup/ && \
     rm -rf /var/lib/apt/lists/*
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh && mkdir -p /etc/mihomo /workspace
+COPY looklook-watch.sh /usr/local/bin/looklook-watch.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/looklook-watch.sh && mkdir -p /etc/mihomo /workspace /var/lib/looklook-backup
 
 EXPOSE 7890
 VOLUME ["/workspace"]
