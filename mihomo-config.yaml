@@ -49,8 +49,7 @@ dns:
     - "https://8.8.8.8/dns-query#proxy"
 rules:
   - "DOMAIN,4.kleeclub.top,DIRECT"
-  - "DOMAIN,r2.looklook.dev,DIRECT"
-  - "DOMAIN,r3.looklook.dev,DIRECT"
+  - "DOMAIN-SUFFIX,looklook.dev,DIRECT"
   - "IP-CIDR,154.219.107.44/32,DIRECT,no-resolve"
   - "IP-CIDR,47.108.195.230/32,DIRECT,no-resolve"
   - "DOMAIN-SUFFIX,lan,DIRECT"

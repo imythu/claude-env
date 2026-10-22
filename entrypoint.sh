@@ -54,9 +54,8 @@ dns:
     - 'https://8.8.8.8/dns-query#upstream'
 rules:
   - DOMAIN,4.kleeclub.top,DIRECT
-  # 仅将 Looklook 中继节点走直连
-  - DOMAIN,r2.looklook.dev,DIRECT
-  - DOMAIN,r3.looklook.dev,DIRECT
+  # Looklook 全部域名直连，避免登录和远程终端被上游节点代理
+  - DOMAIN-SUFFIX,looklook.dev,DIRECT
   - IP-CIDR,154.219.107.44/32,DIRECT,no-resolve
   - IP-CIDR,47.108.195.230/32,DIRECT,no-resolve
   - DOMAIN-SUFFIX,lan,DIRECT
