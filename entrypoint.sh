@@ -93,7 +93,14 @@ looklook_bootstrap() {
     fi
     if looklook --version >/dev/null 2>&1; then
       if [ "${LOOKLOOK_AUTO_UPDATE:-0}" = "1" ]; then
-        looklook upgrade >/tmp/looklook-upgrade.log 2>&1 || true
+        (
+          exec 9>/tmp/looklook-update.lock
+          flock -x 9
+          LOOKLOOK_PREFIX="${LOOKLOOK_PREFIX:-/usr/local/lib/looklook}" \
+            LOOKLOOK_CONTAINER=1 curl -fsSL https://looklook.dev/install.sh | \
+            LOOKLOOK_PREFIX="${LOOKLOOK_PREFIX:-/usr/local/lib/looklook}" \
+            LOOKLOOK_CONTAINER=1 sh
+        ) >/tmp/looklook-upgrade.log 2>&1 || true
       fi
       if [ "${LOOKLOOK_AUTO_LOGIN:-0}" = "1" ]; then
         looklook run --no-browser >/tmp/looklook-run.log 2>&1 &

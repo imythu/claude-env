@@ -5,13 +5,18 @@ prefix="${LOOKLOOK_PREFIX:-/usr/local/lib/looklook}"
 program="$prefix/looklook"
 backup="${LOOKLOOK_BACKUP_DIR:-/var/lib/looklook-backup}"
 image_backup="/usr/local/share/looklook-backup"
+lock_file="/tmp/looklook-update.lock"
 
 copy_tree() {
   local source="$1"
   [ -x "$source/looklook" ] || return 1
-  mkdir -p "$backup"
-  find "$backup" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
-  cp -a "$source/." "$backup/"
+  (
+    exec 9>>"$lock_file"
+    flock -x 9
+    mkdir -p "$backup"
+    find "$backup" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+    cp -a "$source/." "$backup/"
+  )
 }
 
 restore_tree() {
