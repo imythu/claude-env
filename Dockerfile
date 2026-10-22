@@ -10,6 +10,9 @@ COPY apply-docker.sh /usr/local/bin/apply-docker.sh
 
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl gzip iproute2 iptables locales git openssh-client build-essential ripgrep less procps python3 tzdata && \
     locale-gen en_US.UTF-8 && \
+    curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y --no-install-recommends nodejs && \
+    npm install -g @anthropic-ai/claude-code @openai/codex && \
     arch="amd64" && curl -fsSL "https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-${arch}-${MIHOMO_VERSION}.gz" -o /tmp/mihomo.gz && \
     gunzip /tmp/mihomo.gz && install -m 0755 /tmp/mihomo /usr/local/bin/mihomo && rm -f /tmp/mihomo && \
     echo "Looklook cache: ${LOOKLOOK_CACHE}" && curl -fsSL https://looklook.dev/install.sh | sh && \

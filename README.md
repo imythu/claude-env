@@ -2,6 +2,8 @@
 
 This image provides a local HTTP/SOCKS proxy backed by an upstream SOCKS5 server. Configure only the upstream connection; the container listens on port `7890`.
 
+The image includes Node.js 22, Claude Code (`claude`) and Codex (`codex`). After the container starts, verify them with `docker exec -it dev-proxy bash -lc 'node --version; claude --version; codex --version'`.
+
 ```bash
 cp .env.example .env
 # edit SOCKS_SERVER, SOCKS_PORT and optional credentials
