@@ -2,6 +2,7 @@ services:
   dev-proxy:
     build: .
     container_name: dev-proxy
+    hostname: looklook
     cap_add: [NET_ADMIN, NET_RAW]
     devices:
       - /dev/net/tun:/dev/net/tun
