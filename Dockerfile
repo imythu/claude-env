@@ -25,7 +25,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY looklook-watch.sh /usr/local/bin/looklook-watch.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/looklook-watch.sh /usr/local/bin/apply-docker.sh && mkdir -p /etc/mihomo /workspace /var/lib/looklook-backup
+COPY looklook-update.sh /usr/local/bin/looklook-update.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/looklook-watch.sh /usr/local/bin/looklook-update.sh /usr/local/bin/apply-docker.sh && mkdir -p /etc/mihomo /workspace /var/lib/looklook-backup
 
 EXPOSE 7890
 VOLUME ["/workspace"]
