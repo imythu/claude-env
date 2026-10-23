@@ -3,7 +3,7 @@ FROM ubuntu:24.04
 ARG MIHOMO_VERSION=v1.19.20
 ARG LOOKLOOK_CACHE=manual
 ENV DEBIAN_FRONTEND=noninteractive
-ENV LOOKLOOK_PREFIX=/usr/local/lib/looklook
+ENV LOOKLOOK_PREFIX=/opt/looklook
 ENV PATH=/root/.local/bin:${PATH}
 
 COPY apply-docker.sh /usr/local/bin/apply-docker.sh
@@ -20,13 +20,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
     git clone --depth 1 https://github.com/yiancode/fuck-claude.git /opt/fuck-claude && \
     cp /usr/local/bin/apply-docker.sh /opt/fuck-claude/bin/apply-docker.sh && \
     chmod +x /opt/fuck-claude/bin/*.sh && \
-    mkdir -p /usr/local/share/looklook-backup && cp -a /usr/local/lib/looklook/. /usr/local/share/looklook-backup/ && \
+    mkdir -p /usr/local/share/looklook-backup && install -m 0755 /opt/looklook/looklook /usr/local/share/looklook-backup/looklook && \
     rm -rf /var/lib/apt/lists/*
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY looklook-watch.sh /usr/local/bin/looklook-watch.sh
-COPY looklook-update.sh /usr/local/bin/looklook-update.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/looklook-watch.sh /usr/local/bin/looklook-update.sh /usr/local/bin/apply-docker.sh && mkdir -p /etc/mihomo /workspace /var/lib/looklook-backup
+RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/looklook-watch.sh /usr/local/bin/apply-docker.sh && mkdir -p /etc/mihomo /workspace /var/lib/looklook-backup
 
 EXPOSE 7890
 VOLUME ["/workspace"]

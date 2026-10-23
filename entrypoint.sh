@@ -74,11 +74,6 @@ looklook_backup_watch() {
   /usr/local/bin/looklook-watch.sh >/tmp/looklook-watch.log 2>&1 &
 }
 
-looklook_auto_update() {
-  [ "${LOOKLOOK_AUTO_UPDATE:-0}" = "1" ] || return 0
-  /usr/local/bin/looklook-update.sh &
-}
-
 fuck_claude_scheduler() {
   [ "${FUCK_CLAUDE_AUTO_APPLY:-1}" = "1" ] || return 0
   (
@@ -90,11 +85,11 @@ fuck_claude_scheduler() {
 }
 
 looklook_bootstrap() {
-  [ "${LOOKLOOK_AUTO_UPDATE:-0}" = "1" ] || [ "${LOOKLOOK_AUTO_LOGIN:-0}" = "1" ] || return 0
+  [ "${LOOKLOOK_AUTO_LOGIN:-0}" = "1" ] || return 0
   (
     set +e
     if ! looklook --version >/dev/null 2>&1; then
-      LOOKLOOK_PREFIX="${LOOKLOOK_PREFIX:-/usr/local/lib/looklook}" curl -fsSL https://looklook.dev/install.sh | LOOKLOOK_PREFIX="${LOOKLOOK_PREFIX:-/usr/local/lib/looklook}" sh
+      LOOKLOOK_PREFIX="${LOOKLOOK_PREFIX:-/opt/looklook}" curl -fsSL https://looklook.dev/install.sh | LOOKLOOK_PREFIX="${LOOKLOOK_PREFIX:-/opt/looklook}" sh
     fi
     if looklook --version >/dev/null 2>&1; then
       if [ "${LOOKLOOK_AUTO_LOGIN:-0}" = "1" ]; then
@@ -106,7 +101,6 @@ looklook_bootstrap() {
   ) >/tmp/looklook-bootstrap.log 2>&1 &
 }
 looklook_backup_watch
-looklook_auto_update
 fuck_claude_scheduler
 looklook_bootstrap
 exec mihomo -d /etc/mihomo

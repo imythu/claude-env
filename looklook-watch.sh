@@ -1,32 +1,26 @@
 #!/usr/bin/env bash
 set -u
 
-prefix="${LOOKLOOK_PREFIX:-/usr/local/lib/looklook}"
+prefix="${LOOKLOOK_PREFIX:-/opt/looklook}"
 program="$prefix/looklook"
 backup="${LOOKLOOK_BACKUP_DIR:-/var/lib/looklook-backup}"
 image_backup="/usr/local/share/looklook-backup"
-lock_file="/tmp/looklook-update.lock"
 
-copy_tree() {
+copy_binary() {
   local source="$1"
-  [ -x "$source/looklook" ] || return 1
-  (
-    exec 9>>"$lock_file"
-    flock -x 9
-    mkdir -p "$backup"
-    find "$backup" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
-    cp -a "$source/." "$backup/"
-  )
+  [ -x "$source" ] || return 1
+  mkdir -p "$backup"
+  install -m 0755 "$source" "$backup/looklook"
 }
 
 restore_tree() {
   if [ -x "$backup/looklook" ]; then
     mkdir -p "$prefix"
-    cp -a "$backup/." "$prefix/"
+    install -m 0755 "$backup/looklook" "$program"
   elif [ -x "$image_backup/looklook" ]; then
     mkdir -p "$prefix"
-    cp -a "$image_backup/." "$prefix/"
-    copy_tree "$prefix" || true
+    install -m 0755 "$image_backup/looklook" "$program"
+    copy_binary "$program" || true
   fi
 }
 
@@ -40,7 +34,7 @@ while :; do
   if [ -x "$program" ]; then
     current=$(sha256sum "$program" 2>/dev/null | awk '{print $1}')
     if [ -n "$current" ] && [ "$current" != "$last" ]; then
-      copy_tree "$prefix" || true
+      copy_binary "$program" || true
       last="$current"
     fi
   fi
