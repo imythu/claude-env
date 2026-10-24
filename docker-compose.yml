@@ -11,11 +11,6 @@ services:
       SOCKS_PORT: ${SOCKS_PORT}
       SOCKS_USERNAME: ${SOCKS_USERNAME:-}
       SOCKS_PASSWORD: ${SOCKS_PASSWORD:-}
-      LOOKLOOK_AUTO_LOGIN: ${LOOKLOOK_AUTO_LOGIN:-0}
-      LOOKLOOK_BACKUP_INTERVAL: ${LOOKLOOK_BACKUP_INTERVAL:-30}
-      FUCK_CLAUDE_AUTO_APPLY: ${FUCK_CLAUDE_AUTO_APPLY:-1}
-      FUCK_CLAUDE_APPLY_INTERVAL: ${FUCK_CLAUDE_APPLY_INTERVAL:-3600}
     volumes:
       - ./workspace:/workspace
-      - ./looklook/backup:/var/lib/looklook-backup
     restart: unless-stopped

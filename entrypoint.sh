@@ -3,6 +3,13 @@ set -euo pipefail
 : "${SOCKS_SERVER:?Set SOCKS_SERVER, for example proxy.example.com}"
 : "${SOCKS_PORT:?Set SOCKS_PORT, for example 13579}"
 
+# Looklook's updater renames the extracted `fonts` directory. Keep its staging
+# directory beside the install prefix so rename(2) cannot cross filesystems.
+export TMPDIR="${LOOKLOOK_TMPDIR:-${LOOKLOOK_PREFIX:-/opt/looklook}/.tmp}"
+export TMP="$TMPDIR"
+export TEMP="$TMPDIR"
+mkdir -p "$TMPDIR"
+
 cat > /etc/mihomo/config.yaml <<EOF
 mixed-port: 7890
 allow-lan: false
@@ -70,37 +77,4 @@ export http_proxy="${HTTP_PROXY:-http://127.0.0.1:7890}"
 export https_proxy="${HTTPS_PROXY:-http://127.0.0.1:7890}"
 export all_proxy="${ALL_PROXY:-socks5://127.0.0.1:7890}"
 
-looklook_backup_watch() {
-  /usr/local/bin/looklook-watch.sh >/tmp/looklook-watch.log 2>&1 &
-}
-
-fuck_claude_scheduler() {
-  [ "${FUCK_CLAUDE_AUTO_APPLY:-1}" = "1" ] || return 0
-  (
-    while :; do
-      /opt/fuck-claude/bin/apply-docker.sh >/tmp/fuck-claude-apply.log 2>&1 || true
-      sleep "${FUCK_CLAUDE_APPLY_INTERVAL:-3600}"
-    done
-  ) &
-}
-
-looklook_bootstrap() {
-  [ "${LOOKLOOK_AUTO_LOGIN:-0}" = "1" ] || return 0
-  (
-    set +e
-    if ! looklook --version >/dev/null 2>&1; then
-      LOOKLOOK_PREFIX="${LOOKLOOK_PREFIX:-/opt/looklook}" curl -fsSL https://looklook.dev/install.sh | LOOKLOOK_PREFIX="${LOOKLOOK_PREFIX:-/opt/looklook}" sh
-    fi
-    if looklook --version >/dev/null 2>&1; then
-      if [ "${LOOKLOOK_AUTO_LOGIN:-0}" = "1" ]; then
-        looklook run --no-browser >/tmp/looklook-run.log 2>&1 &
-        sleep 2
-        looklook login --no-browser </dev/null >/tmp/looklook-login.log 2>&1 || true
-      fi
-    fi
-  ) >/tmp/looklook-bootstrap.log 2>&1 &
-}
-looklook_backup_watch
-fuck_claude_scheduler
-looklook_bootstrap
 exec mihomo -d /etc/mihomo
