@@ -7,18 +7,17 @@ ENV LOOKLOOK_PREFIX=/opt/looklook
 # its install prefix.  Its updater renames the extracted `fonts` directory;
 # using /tmp can be a different mount in Docker and makes rename(2) fail with
 # EXDEV ("Cross-device link").
-ENV TMPDIR=/opt/looklook/.tmp
-ENV TMP=/opt/looklook/.tmp
-ENV TEMP=/opt/looklook/.tmp
 ENV PATH=/root/.local/bin:${PATH}
 
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl gzip iproute2 iptables locales openssh-client build-essential ripgrep less procps python3 tzdata && \
+RUN export TMPDIR=/tmp TMP=/tmp TEMP=/tmp && \
+    apt-get update && apt-get install -y --no-install-recommends ca-certificates curl gzip iproute2 iptables locales openssh-client build-essential ripgrep less procps python3 tzdata && \
     locale-gen en_US.UTF-8 && \
     curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y --no-install-recommends nodejs && \
     npm install -g @anthropic-ai/claude-code @openai/codex && \
     arch="amd64" && curl -fsSL "https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-${arch}-${MIHOMO_VERSION}.gz" -o /tmp/mihomo.gz && \
     gunzip /tmp/mihomo.gz && install -m 0755 /tmp/mihomo /usr/local/bin/mihomo && rm -f /tmp/mihomo && \
+    export TMPDIR=/opt/looklook/.tmp TMP=/opt/looklook/.tmp TEMP=/opt/looklook/.tmp && \
     mkdir -p /opt/looklook/.tmp && \
     curl -fsSL https://looklook.dev/install.sh | sh && \
     mkdir -p /opt/looklook/.tmp && \
